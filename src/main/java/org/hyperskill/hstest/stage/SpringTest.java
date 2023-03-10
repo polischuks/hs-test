@@ -181,12 +181,9 @@ public abstract class SpringTest extends StageTest<Object> {
                 Class<?> mainClassKotlin = ReflectionUtils
                         .getAllClassesFromPackage("")
                         .stream()
-                        .filter(it -> {
-                            if (it.getCanonicalName().equals("ApplicationKt") && ReflectionUtils.hasMainMethod(it)) {
-                                return true;
-                            }
-                            return false;
-                        }).collect(Collectors.toList()).get(0);
+                        .filter(it -> 
+                                it.getCanonicalName().equals("ApplicationKt") && ReflectionUtils.hasMainMethod(it))
+                        .collect(Collectors.toList()).get(0);
                 ReflectionUtils.getMainMethod(mainClassKotlin)
                         .invoke(null, new Object[] {args});
             }
