@@ -175,17 +175,20 @@ public abstract class SpringTest extends StageTest<Object> {
                 ReflectionUtils.getMainMethod(suitableClasses.get(0))
                         .invoke(null, new Object[] {args});
             else {
-                Class<?> mainClassKotlin = ReflectionUtils
-                        .getAllClassesFromPackage("")
-                        .stream()
-                        .filter(clazz -> {
-                            if (clazz.getCanonicalName().equals("ApplicationKt")
-                                    && ReflectionUtils.hasMainMethod(clazz)) return true;
-                            return false;
-                        })
-                        .collect(Collectors.toList()).get(0);
-                ReflectionUtils.getMainMethod(mainClassKotlin)
-                        .invoke(null, new Object[]{args});
+                ReflectionUtils
+                        .getAllClassesFromPackage("").forEach(it -> {
+                            if (it.getCanonicalName().equals("ApplicationKt")
+                                    && ReflectionUtils.hasMainMethod(it)) {
+                                try {
+                                    ReflectionUtils.getMainMethod(it)
+                                        .invoke(null, new Object[]{args});
+                                } catch (IllegalAccessException e) {
+                                    throw new RuntimeException(e);
+                                } catch (InvocationTargetException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        });
             }
             springRunning = true;
         }
