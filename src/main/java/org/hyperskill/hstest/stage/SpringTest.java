@@ -157,9 +157,6 @@ public abstract class SpringTest extends StageTest<Object> {
         if (!springRunning) {
             String annotationPath = "org.springframework.boot.autoconfigure.SpringBootApplication";
             List<Class<?>> suitableClasses = ReflectionUtils.getClassesAnnotatedWith(annotationPath);
-                    //.stream()
-                    //.filter(ReflectionUtils::hasMainMethod)
-                    //.collect(Collectors.toList());;
 
             int length = suitableClasses.size();
             if (length == 0) {
@@ -181,16 +178,15 @@ public abstract class SpringTest extends StageTest<Object> {
                 Class<?> mainClassKotlin = ReflectionUtils
                         .getAllClassesFromPackage("")
                         .stream()
-                        .filter(it -> 
-                                it.getCanonicalName().equals("ApplicationKt") && ReflectionUtils.hasMainMethod(it))
+                        .filter(clazz -> {
+                            if (clazz.getCanonicalName().equals("ApplicationKt")
+                                    && ReflectionUtils.hasMainMethod(clazz)) return true;
+                            return false;
+                        })
                         .collect(Collectors.toList()).get(0);
                 ReflectionUtils.getMainMethod(mainClassKotlin)
-                        .invoke(null, new Object[] {args});
+                        .invoke(null, new Object[]{args});
             }
-
-            //Class<?> springClass = suitableClasses.get(0);
-            //Method mainMethod = ReflectionUtils.getMainMethod(springClass);
-            //mainMethod.invoke(null, new Object[] {args});
             springRunning = true;
         }
     }
