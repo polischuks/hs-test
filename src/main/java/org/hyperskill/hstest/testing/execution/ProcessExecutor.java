@@ -83,9 +83,9 @@ public abstract class ProcessExecutor extends ProgramExecutor {
         try {
             FileUtils.chdir(runnable.getFolder());
 
-            if (!compileProgram()) {
-                return;
-            }
+//            if (!compileProgram()) {
+//                return;
+//            }
 
             compiled = true;
 
